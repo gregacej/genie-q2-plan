@@ -440,7 +440,10 @@ saveBtn.addEventListener('click', async () => {
 });
 
 // --- Init ---
-fetch('data.json?'+Date.now()).then(r=>r.json()).then(data => { appData = data; render(data); initNav(); });
+fetch('data.json?'+Date.now()).then(r=>r.json()).then(data => {
+  appData = data; render(data); initNav();
+  if (new URLSearchParams(location.search).has('edit')) editBtn.click();
+});
 </script>
 </body>
 </html>
