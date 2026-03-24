@@ -850,9 +850,9 @@
 <!-- Edit Toolbar -->
 <div class="edit-toolbar">
   <div class="edit-actions">
-    <button class="edit-btn save-btn" id="save-btn" title="Download updated HTML">
-      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-      Download
+    <button class="edit-btn save-btn" id="save-btn" title="Save changes to site">
+      <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+      Save
     </button>
   </div>
   <button class="edit-btn icon-only" id="edit-toggle" title="Toggle edit mode">
@@ -1139,46 +1139,114 @@
     });
   });
 
-  // Download updated HTML
-  saveBtn.addEventListener('click', () => {
-    // Turn off edit mode
+  // GitHub config
+  const REPO = 'gregacej/genie-q2-plan';
+  const API = 'https://api.github.com';
+
+  function getToken() {
+    let token = localStorage.getItem('gh_token');
+    if (!token) {
+      token = prompt('Enter your GitHub token (one-time setup):');
+      if (token) localStorage.setItem('gh_token', token);
+    }
+    return token;
+  }
+
+  async function getFileSha(path, token) {
+    const res = await fetch(`${API}/repos/${REPO}/contents/${path}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data.sha;
+    }
+    return null;
+  }
+
+  async function saveFile(path, content, token, message) {
+    const sha = await getFileSha(path, token);
+    const body = {
+      message,
+      content: btoa(unescape(encodeURIComponent(content))),
+    };
+    if (sha) body.sha = sha;
+    const res = await fetch(`${API}/repos/${REPO}/contents/${path}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+    return res.ok;
+  }
+
+  function buildCleanHTML(includeEditToolbar) {
+    // Turn off edit mode on DOM
     editMode = false;
     editBtn.classList.remove('active');
     document.body.classList.remove('edit-mode');
+    closeOpenEditor();
+    removeEditControls();
     document.querySelectorAll(editableSelectors).forEach(el => {
       el.removeAttribute('contenteditable');
     });
 
-    // Close any open score editor
-    closeOpenEditor();
-
-    // Clone the document
     const clone = document.documentElement.cloneNode(true);
 
-    // Remove any score editors, delete buttons, add buttons from clone
-    clone.querySelectorAll('.score-editor, .item-delete, .add-card-btn, .item-move').forEach(e => e.remove());
+    // Remove score editors
+    clone.querySelectorAll('.score-editor').forEach(e => e.remove());
 
-    // Reset slides: make slide-0 active, remove active from others
+    // Remove edit toolbar for the view-only version
+    if (!includeEditToolbar) {
+      const toolbar = clone.querySelector('.edit-toolbar');
+      if (toolbar) toolbar.remove();
+    }
+
+    // Reset slides
     clone.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
     const firstSlide = clone.querySelector('#slide-0');
     if (firstSlide) firstSlide.classList.add('active');
 
-    // Clear dynamically generated nav dots and counter
+    // Clear nav dots and counter
     const dots = clone.querySelector('#nav-dots');
     if (dots) dots.innerHTML = '';
     const counter = clone.querySelector('#slide-counter');
     if (counter) counter.textContent = '';
 
-    const html = '<!DOCTYPE html>\n' + clone.outerHTML;
-    const blob = new Blob([html], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'q2-presentation-copy.html';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    return '<!DOCTYPE html>\n' + clone.outerHTML;
+  }
+
+  // Save to GitHub
+  saveBtn.addEventListener('click', async () => {
+    const token = getToken();
+    if (!token) return;
+
+    const origText = saveBtn.textContent;
+    saveBtn.innerHTML = saveBtn.querySelector('svg').outerHTML + ' Saving...';
+    saveBtn.disabled = true;
+
+    try {
+      const editHTML = buildCleanHTML(true);
+      const viewHTML = buildCleanHTML(false);
+
+      const [r1, r2] = await Promise.all([
+        saveFile('edit.html', editHTML, token, 'Update presentation (edit)'),
+        saveFile('index.html', viewHTML, token, 'Update presentation (view)')
+      ]);
+
+      if (r1 && r2) {
+        saveBtn.innerHTML = saveBtn.querySelector('svg')?.outerHTML + ' Saved!';
+        setTimeout(() => location.reload(), 1500);
+      } else {
+        localStorage.removeItem('gh_token');
+        alert('Save failed. Your token may have expired. Reload and try again.');
+      }
+    } catch (err) {
+      alert('Save failed: ' + err.message);
+    } finally {
+      saveBtn.disabled = false;
+    }
   });
 </script>
 
