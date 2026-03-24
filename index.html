@@ -41,7 +41,6 @@
     padding: 8px 20px; border-radius: 24px; margin-bottom: 20px;
     border: 1.5px solid rgba(140,101,255,0.2);
   }
-
   .content-slide h2 { font-size: 40px; font-weight: 800; letter-spacing: -1px; margin-bottom: 40px; }
   .items-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; text-align: left; max-width: 960px; margin: 0 auto; }
   .items-grid.single-col { grid-template-columns: 1fr; max-width: 700px; }
@@ -74,6 +73,7 @@
   }
   .item-desc { font-size: 13px; color: #666; line-height: 1.45; font-weight: 400; }
 
+  /* Nav */
   .nav {
     position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
     display: flex; align-items: center; gap: 12px; z-index: 100;
@@ -93,21 +93,171 @@
   .nav-dot.active { background: linear-gradient(135deg, #FF7451, #8C65FF); width: 24px; border-radius: 4px; }
   .slide-counter { font-size: 12px; color: #aaa; font-weight: 500; min-width: 40px; text-align: center; }
 
-  .edit-link {
-    position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; border-radius: 12px;
-    border: 1px solid rgba(200,190,230,0.3); background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(12px); cursor: pointer; display: flex; align-items: center; justify-content: center;
-    z-index: 200; transition: all 0.2s; box-shadow: 0 2px 10px rgba(0,0,0,0.06); text-decoration: none;
+  /* Edit mode */
+  body.edit-mode [contenteditable="true"] { outline: none; border-radius: 4px; transition: box-shadow 0.2s; }
+  body.edit-mode [contenteditable="true"]:hover { box-shadow: 0 0 0 2px rgba(140,101,255,0.15); }
+  body.edit-mode [contenteditable="true"]:focus { box-shadow: 0 0 0 2px rgba(140,101,255,0.4); }
+  body.edit-mode .item-card:hover { transform: none; }
+  body.edit-mode .item-card { padding-bottom: 40px; }
+  body.edit-mode .item-name { margin-right: 60px; }
+  body.edit-mode .score-badge { cursor: pointer; transition: background 0.2s; }
+  body.edit-mode .score-badge:hover { background: rgba(140,101,255,0.2); }
+  body.edit-mode .score-badge:hover + .score-tooltip { display: none; }
+
+  .edit-toolbar { position: fixed; top: 20px; right: 20px; display: flex; gap: 8px; z-index: 200; }
+  .edit-btn {
+    height: 40px; border-radius: 12px; border: 1px solid rgba(200,190,230,0.3);
+    background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 14px; gap: 6px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; color: #666;
+    transition: all 0.2s; box-shadow: 0 2px 10px rgba(0,0,0,0.06);
   }
-  .edit-link:hover { box-shadow: 0 4px 16px rgba(140,101,255,0.15); border-color: rgba(140,101,255,0.3); }
-  .edit-link svg { width: 18px; height: 18px; stroke: #888; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .edit-btn.icon-only { width: 40px; padding: 0; }
+  .edit-btn:hover { box-shadow: 0 4px 16px rgba(140,101,255,0.15); border-color: rgba(140,101,255,0.3); color: #444; }
+  .edit-btn.active { background: linear-gradient(135deg, #FF7451, #DB5EC6, #8C65FF); border-color: transparent; color: #fff; }
+  .edit-btn.active svg { stroke: #fff; }
+  .edit-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .edit-btn.save-btn { background: linear-gradient(135deg, #FF7451, #DB5EC6, #8C65FF); border-color: transparent; color: #fff; }
+  .edit-btn.save-btn:hover { opacity: 0.9; }
+  .edit-actions { display: none; }
+  body.edit-mode .edit-actions { display: flex; gap: 8px; }
+
+  /* Score editor */
+  .score-editor {
+    display: none; position: absolute; top: -12px; right: 42px;
+    background: #1a1a2e; color: #fff; font-size: 11px; padding: 12px 16px;
+    border-radius: 12px; z-index: 20; box-shadow: 0 4px 24px rgba(0,0,0,0.2); white-space: nowrap;
+  }
+  .score-editor::after { content: ''; position: absolute; top: 18px; right: -5px; width: 10px; height: 10px; background: #1a1a2e; transform: rotate(45deg); }
+  .score-editor.open { display: block; }
+  .score-editor-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .score-editor-row:last-child { margin-bottom: 0; }
+  .score-editor label { font-weight: 500; width: 50px; color: #aaa; }
+  .score-editor select {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; border-radius: 6px; padding: 4px 8px; font-size: 11px;
+    font-family: 'Inter', sans-serif; cursor: pointer; outline: none;
+  }
+  .score-editor select:focus { border-color: rgba(140,101,255,0.6); }
+  .score-editor .score-result { font-weight: 700; color: #8C65FF; font-size: 13px; }
+
+  /* Delete button */
+  .item-delete {
+    display: none; position: absolute; top: 10px; right: 44px;
+    width: 24px; height: 24px; border-radius: 6px; border: none;
+    background: rgba(255,80,80,0.08); color: #e05050; font-size: 14px;
+    cursor: pointer; align-items: center; justify-content: center;
+    transition: background 0.2s; padding: 0; line-height: 1;
+  }
+  .item-delete:hover { background: rgba(255,80,80,0.2); }
+  body.edit-mode .item-delete { display: flex; }
+
+  /* Add card button */
+  .add-card-btn {
+    display: none; grid-column: 1 / -1; border: 2px dashed rgba(140,101,255,0.2);
+    border-radius: 14px; padding: 16px; background: transparent; cursor: pointer;
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: #8C65FF;
+    transition: all 0.2s; text-align: center;
+  }
+  .add-card-btn:hover { border-color: rgba(140,101,255,0.4); background: rgba(140,101,255,0.04); }
+  body.edit-mode .add-card-btn { display: block; }
+
+  /* Move dropdown */
+  .item-move {
+    display: none; position: absolute; bottom: 8px; right: 12px;
+    border: 1px solid rgba(140,101,255,0.2); border-radius: 6px;
+    background: rgba(140,101,255,0.04); color: #8C65FF;
+    font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600;
+    padding: 3px 6px; cursor: pointer; outline: none;
+    appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238C65FF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 6px center; padding-right: 20px;
+  }
+  .item-move:hover { border-color: rgba(140,101,255,0.4); background-color: rgba(140,101,255,0.08); }
+  body.edit-mode .item-move { display: block; }
+
+  /* Auth modal */
+  .modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3); backdrop-filter: blur(4px);
+    z-index: 500; align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: #fff; border-radius: 20px; padding: 32px; max-width: 420px; width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15); text-align: center;
+  }
+  .modal h3 {
+    font-size: 18px; font-weight: 700; margin-bottom: 8px; color: #1a1a2e;
+  }
+  .modal p {
+    font-size: 14px; color: #666; line-height: 1.5; margin-bottom: 24px;
+  }
+  .modal-buttons {
+    display: flex; gap: 10px; justify-content: center;
+  }
+  .modal-btn {
+    padding: 10px 24px; border-radius: 12px; border: none; font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  }
+  .modal-btn.primary {
+    background: linear-gradient(135deg, #FF7451, #DB5EC6, #8C65FF); color: #fff;
+  }
+  .modal-btn.primary:hover { opacity: 0.9; }
+  .modal-btn.secondary {
+    background: #f5f5f5; color: #666;
+  }
+  .modal-btn.secondary:hover { background: #eee; }
+
+  .token-input-wrap {
+    display: none; margin-top: 16px; text-align: left;
+  }
+  .token-input-wrap.open { display: block; }
+  .token-input-wrap label {
+    font-size: 12px; font-weight: 600; color: #888; display: block; margin-bottom: 6px;
+  }
+  .token-input-wrap input {
+    width: 100%; padding: 10px 14px; border-radius: 10px; border: 1.5px solid rgba(140,101,255,0.2);
+    font-family: 'Inter', sans-serif; font-size: 13px; outline: none; transition: border-color 0.2s;
+  }
+  .token-input-wrap input:focus { border-color: rgba(140,101,255,0.5); }
+  .token-input-wrap .token-submit {
+    margin-top: 12px; width: 100%;
+  }
 </style>
 </head>
 <body>
-<a class="edit-link" href="edit.html?edit=1" title="Edit presentation">
-  <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-</a>
 <div id="slides-container"></div>
+
+<!-- Auth Modal -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <h3>Edit access required</h3>
+    <p id="modal-text">A key is needed to make changes. Do you have access?</p>
+    <div class="modal-buttons" id="modal-buttons">
+      <button class="modal-btn secondary" id="modal-no">No</button>
+      <button class="modal-btn primary" id="modal-yes">Yes, I have a key</button>
+    </div>
+    <div class="token-input-wrap" id="token-input-wrap">
+      <label>Paste your GitHub access token</label>
+      <input type="password" id="token-input" placeholder="github_pat_...">
+      <button class="modal-btn primary token-submit" id="token-submit">Save &amp; start editing</button>
+    </div>
+  </div>
+</div>
+
+<div class="edit-toolbar">
+  <div class="edit-actions">
+    <button class="edit-btn save-btn" id="save-btn" title="Save changes">
+      <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Save
+    </button>
+  </div>
+  <button class="edit-btn icon-only" id="edit-toggle" title="Toggle edit mode">
+    <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+  </button>
+</div>
 
 <div class="nav">
   <button class="nav-btn" id="prev-btn" onclick="changeSlide(-1)">
@@ -123,9 +273,12 @@
 <script>
 const EL = { 1:'High', 2:'Mid', 3:'Mid', 4:'Mid', 5:'Low' };
 const IL = { 1:'Low', 2:'Low', 3:'Mid', 4:'High', 5:'High' };
+const REPO = 'gregacej/genie-q2-plan';
+const API = 'https://api.github.com';
 
 const ICON = `<svg class="genie-icon" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M199.937 37.627C206.837 37.627 212.432 43.2212 212.432 50.1221C212.432 57.0229 206.837 62.6172 199.937 62.6172C124.027 62.6172 62.4902 124.154 62.4902 200.063C62.4902 234.278 74.9683 265.552 95.6479 289.612C99.3538 293.924 99.6814 300.182 96.4451 304.857L73.8302 337.51H199.937C275.846 337.51 337.383 275.973 337.383 200.063C337.383 193.163 342.977 187.568 349.878 187.568C356.779 187.568 362.373 193.163 362.373 200.063C362.373 289.775 289.648 362.5 199.937 362.5H49.9951C45.3474 362.5 41.0886 359.914 38.9317 355.797C36.7767 351.681 37.0837 346.715 39.7289 342.895L70.5925 298.3C49.845 271.02 37.5 236.976 37.5 200.063C37.5 110.352 110.225 37.627 199.937 37.627Z" fill="url(#p0)"/><path d="M252.357 213.616C254.078 206.939 260.891 202.907 267.57 204.619C274.249 206.338 278.279 213.152 276.567 219.831C267.783 253.96 236.811 279.199 199.92 279.199C163.031 279.197 132.058 253.959 123.274 219.831C121.562 213.153 125.594 206.339 132.271 204.619C138.95 202.904 145.761 206.939 147.483 213.616C153.497 236.967 174.712 254.207 199.92 254.209C225.13 254.209 246.344 236.968 252.357 213.616Z" fill="url(#p1)"/><path fill-rule="evenodd" clip-rule="evenodd" d="M299.897 29.2969C305.664 29.2969 310.675 33.2441 312.035 38.8472C314.915 50.7547 321.025 61.65 329.687 70.3127C338.35 78.9755 349.245 85.0849 361.153 87.9654C366.756 89.3248 370.703 94.3362 370.703 100.103C370.703 105.869 366.756 110.88 361.153 112.24C349.245 115.12 338.35 121.23 329.687 129.892C321.025 138.555 314.915 149.45 312.035 161.358C310.675 166.961 305.664 170.908 299.897 170.908C294.131 170.908 289.12 166.961 287.76 161.358C284.88 149.45 278.77 138.555 270.108 129.892C261.445 121.23 250.55 115.12 238.642 112.24C233.039 110.88 229.092 105.869 229.092 100.103C229.092 94.3362 233.039 89.3248 238.642 87.9654C250.55 85.0849 261.445 78.9755 270.108 70.3127C278.77 61.65 284.88 50.7547 287.76 38.8472L288.427 36.8297C290.376 32.3189 294.851 29.2969 299.897 29.2969ZM299.897 72.9322C296.405 78.3327 292.365 83.3932 287.777 87.9816C283.188 92.5701 278.128 96.6097 272.727 100.103C278.128 103.595 283.188 107.635 287.777 112.223C292.362 116.809 296.406 121.86 299.897 127.257C303.389 121.86 307.433 116.809 312.018 112.223C316.604 107.638 321.655 103.594 327.052 100.103C321.655 96.6114 316.604 92.5668 312.018 87.9816C307.43 83.3932 303.39 78.3327 299.897 72.9322Z" fill="url(#p2)"/><defs><linearGradient id="p0" x1="37.5" y1="365" x2="84.45" y2="-6.41" gradientUnits="userSpaceOnUse"><stop stop-color="#FF7451"/><stop offset=".5" stop-color="#DB5EC6"/><stop offset="1" stop-color="#8C65FF"/></linearGradient><linearGradient id="p1" x1="37.5" y1="365" x2="84.45" y2="-6.41" gradientUnits="userSpaceOnUse"><stop stop-color="#FF7451"/><stop offset=".5" stop-color="#DB5EC6"/><stop offset="1" stop-color="#8C65FF"/></linearGradient><linearGradient id="p2" x1="37.5" y1="365" x2="84.45" y2="-6.41" gradientUnits="userSpaceOnUse"><stop stop-color="#FF7451"/><stop offset=".5" stop-color="#DB5EC6"/><stop offset="1" stop-color="#8C65FF"/></linearGradient></defs></svg>`;
 
+// --- Render ---
 function render(data) {
   const c = document.getElementById('slides-container');
   let h = `<div class="slide active title-centered" id="slide-0"><div class="bg-gradient-top"></div><div class="slide-content title-slide">${ICON}<h1>${data.title}</h1><p class="subtitle">${data.subtitle}</p></div></div>`;
@@ -134,12 +287,13 @@ function render(data) {
     const cls = items.length <= 4 ? ' single-col' : '';
     h += `<div class="slide" id="slide-${i+1}"><div class="bg-gradient-top"></div><div class="slide-content content-slide"><span class="section-label">${g.label}</span><h2>${g.heading}</h2><div class="items-grid${cls}" data-group="${g.id}">${items.map(it => {
       const s = it.effort + it.impact;
-      return `<div class="item-card"><div class="score-badge">${s}</div><div class="score-tooltip">Effort: ${it.effort}/5 (${EL[it.effort]}) &middot; Impact: ${it.impact}/5 (${IL[it.impact]})<br>Score = Effort + Impact</div><div class="item-name">${it.name}</div><div class="item-desc">${it.desc}</div></div>`;
+      return `<div class="item-card" data-effort="${it.effort}" data-impact="${it.impact}"><div class="score-badge">${s}</div><div class="score-tooltip">Effort: ${it.effort}/5 (${EL[it.effort]}) &middot; Impact: ${it.impact}/5 (${IL[it.impact]})<br>Score = Effort + Impact</div><div class="item-name">${it.name}</div><div class="item-desc">${it.desc}</div></div>`;
     }).join('')}</div></div></div>`;
   });
   c.innerHTML = h;
 }
 
+// --- Navigation ---
 let totalSlides = 0, current = 0;
 function initNav() {
   totalSlides = document.querySelectorAll('.slide').length;
@@ -157,6 +311,238 @@ function updateNav() {
 }
 document.addEventListener('keydown', e => { if (e.key==='ArrowRight'||e.key==='ArrowDown') changeSlide(1); if (e.key==='ArrowLeft'||e.key==='ArrowUp') changeSlide(-1); });
 
+// --- Auth modal ---
+const authModal = document.getElementById('auth-modal');
+const modalButtons = document.getElementById('modal-buttons');
+const tokenWrap = document.getElementById('token-input-wrap');
+const tokenInput = document.getElementById('token-input');
+
+function showAuthModal() {
+  modalButtons.style.display = 'flex';
+  tokenWrap.classList.remove('open');
+  tokenInput.value = '';
+  authModal.classList.add('open');
+}
+
+function hideAuthModal() { authModal.classList.remove('open'); }
+
+document.getElementById('modal-no').addEventListener('click', hideAuthModal);
+
+document.getElementById('modal-yes').addEventListener('click', () => {
+  modalButtons.style.display = 'none';
+  tokenWrap.classList.add('open');
+  tokenInput.focus();
+});
+
+document.getElementById('token-submit').addEventListener('click', () => {
+  const token = tokenInput.value.trim();
+  if (!token) return;
+  localStorage.setItem('gh_token', token);
+  hideAuthModal();
+  enterEditMode();
+});
+
+tokenInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('token-submit').click();
+});
+
+// --- Edit mode ---
+const editBtn = document.getElementById('edit-toggle');
+const saveBtn = document.getElementById('save-btn');
+let editMode = false;
+let openEditor = null;
+
+const editableSelectors = '.title-slide h1, .title-slide .subtitle, .section-label, .content-slide h2, .item-name, .item-desc';
+const groupLabels = { working:'In Progress', techdebt:'Tech Debt', lowhanging:'Low Hanging Fruits', gaps:'Gaps & Improvements', features:'Features' };
+
+function enterEditMode() {
+  editMode = true;
+  editBtn.classList.add('active');
+  document.body.classList.add('edit-mode');
+  injectEditControls();
+  document.querySelectorAll(editableSelectors).forEach(el => { el.contentEditable = 'true'; });
+}
+
+function exitEditMode() {
+  editMode = false;
+  editBtn.classList.remove('active');
+  document.body.classList.remove('edit-mode');
+  closeOpenEditor();
+  removeEditControls();
+  document.querySelectorAll(editableSelectors).forEach(el => { el.contentEditable = 'false'; el.removeAttribute('contenteditable'); });
+}
+
+function reorderGrid(card) {
+  const grid = card.closest('.items-grid');
+  if (!grid) return;
+  const cards = [...grid.querySelectorAll('.item-card')];
+  cards.sort((a, b) => (parseInt(b.querySelector('.score-badge').textContent)||0) - (parseInt(a.querySelector('.score-badge').textContent)||0));
+  cards.forEach(c => grid.appendChild(c));
+}
+
+function closeOpenEditor() {
+  if (openEditor) { const card = openEditor.closest('.item-card'); openEditor.remove(); openEditor = null; if (card) reorderGrid(card); }
+}
+
+function createScoreEditor(card) {
+  const badge = card.querySelector('.score-badge');
+  const tooltip = card.querySelector('.score-tooltip');
+  const effort = parseInt(card.dataset.effort) || 3;
+  const impact = parseInt(card.dataset.impact) || 3;
+
+  const editor = document.createElement('div');
+  editor.className = 'score-editor open';
+  editor.innerHTML = `
+    <div class="score-editor-row"><label>Effort</label><select class="effort-select">${[1,2,3,4,5].map(v => `<option value="${v}" ${v===effort?'selected':''}>${v}/5 (${EL[v]})</option>`).join('')}</select></div>
+    <div class="score-editor-row"><label>Impact</label><select class="impact-select">${[1,2,3,4,5].map(v => `<option value="${v}" ${v===impact?'selected':''}>${v}/5 (${IL[v]})</option>`).join('')}</select></div>
+    <div class="score-editor-row"><label>Score</label><span class="score-result">${effort+impact}</span></div>`;
+
+  const update = () => {
+    const e = parseInt(editor.querySelector('.effort-select').value);
+    const i = parseInt(editor.querySelector('.impact-select').value);
+    editor.querySelector('.score-result').textContent = e + i;
+    badge.textContent = e + i;
+    card.dataset.effort = e;
+    card.dataset.impact = i;
+    tooltip.innerHTML = `Effort: ${e}/5 (${EL[e]}) &middot; Impact: ${i}/5 (${IL[i]})<br>Score = Effort + Impact`;
+  };
+  editor.querySelector('.effort-select').addEventListener('change', update);
+  editor.querySelector('.impact-select').addEventListener('change', update);
+  return editor;
+}
+
+function injectEditControls() {
+  document.querySelectorAll('.item-card').forEach(card => {
+    if (!card.querySelector('.item-delete')) {
+      const btn = document.createElement('button'); btn.className = 'item-delete'; btn.title = 'Remove'; btn.innerHTML = '&#x2715;';
+      card.insertBefore(btn, card.firstChild);
+    }
+    if (!card.querySelector('.item-move')) {
+      const currentGroup = card.closest('.items-grid')?.dataset.group;
+      const select = document.createElement('select'); select.className = 'item-move'; select.title = 'Move to group';
+      Object.entries(groupLabels).forEach(([key, label]) => { const opt = document.createElement('option'); opt.value = key; opt.textContent = label; if (key === currentGroup) opt.selected = true; select.appendChild(opt); });
+      select.addEventListener('change', () => {
+        const targetGrid = document.querySelector(`.items-grid[data-group="${select.value}"]`);
+        if (!targetGrid) return;
+        const addBtn = targetGrid.querySelector('.add-card-btn');
+        if (addBtn) targetGrid.insertBefore(card, addBtn); else targetGrid.appendChild(card);
+        select.value = card.closest('.items-grid')?.dataset.group;
+        reorderGrid(card);
+      });
+      card.appendChild(select);
+    }
+  });
+  document.querySelectorAll('.items-grid').forEach(grid => {
+    if (!grid.querySelector('.add-card-btn')) {
+      const btn = document.createElement('button'); btn.className = 'add-card-btn'; btn.textContent = '+ Add item'; grid.appendChild(btn);
+    }
+  });
+}
+
+function removeEditControls() {
+  document.querySelectorAll('.item-delete, .add-card-btn, .item-move').forEach(b => b.remove());
+}
+
+// Click handlers
+document.addEventListener('click', (e) => {
+  if (!editMode) return;
+
+  const badge = e.target.closest('.score-badge');
+  if (badge) { e.stopPropagation(); closeOpenEditor(); const card = badge.closest('.item-card'); const editor = createScoreEditor(card); card.appendChild(editor); openEditor = editor; return; }
+  if (!e.target.closest('.score-editor')) closeOpenEditor();
+
+  const delBtn = e.target.closest('.item-delete');
+  if (delBtn) { e.stopPropagation(); delBtn.closest('.item-card')?.remove(); return; }
+
+  const addBtn = e.target.closest('.add-card-btn');
+  if (addBtn) {
+    e.stopPropagation();
+    const grid = addBtn.closest('.items-grid');
+    const card = document.createElement('div'); card.className = 'item-card'; card.dataset.effort = 3; card.dataset.impact = 3;
+    card.innerHTML = `<div class="score-badge">6</div><div class="score-tooltip">Effort: 3/5 (Mid) &middot; Impact: 3/5 (Mid)<br>Score = Effort + Impact</div><div class="item-name" contenteditable="true">New Item</div><div class="item-desc" contenteditable="true">Click to add description</div>`;
+    grid.insertBefore(card, addBtn);
+    injectEditControls();
+    return;
+  }
+});
+
+// Edit toggle: check for token first
+editBtn.addEventListener('click', () => {
+  if (editMode) {
+    exitEditMode();
+    return;
+  }
+  const token = localStorage.getItem('gh_token');
+  if (token) {
+    enterEditMode();
+  } else {
+    showAuthModal();
+  }
+});
+
+// --- Read DOM back to JSON ---
+function domToData() {
+  const data = {
+    title: document.querySelector('.title-slide h1').textContent,
+    subtitle: document.querySelector('.title-slide .subtitle').textContent,
+    groups: []
+  };
+  document.querySelectorAll('.items-grid').forEach(grid => {
+    const slide = grid.closest('.slide');
+    const group = { id: grid.dataset.group, label: slide.querySelector('.section-label').textContent, heading: slide.querySelector('h2').textContent, items: [] };
+    grid.querySelectorAll('.item-card').forEach(card => {
+      group.items.push({ name: card.querySelector('.item-name').textContent, desc: card.querySelector('.item-desc').textContent, effort: parseInt(card.dataset.effort) || 3, impact: parseInt(card.dataset.impact) || 3 });
+    });
+    data.groups.push(group);
+  });
+  return data;
+}
+
+// --- GitHub save ---
+async function getFileSha(path, token) {
+  const res = await fetch(`${API}/repos/${REPO}/contents/${path}`, { headers: { 'Authorization': `Bearer ${token}` } });
+  return res.ok ? (await res.json()).sha : null;
+}
+
+async function saveFile(path, content, token, message) {
+  const sha = await getFileSha(path, token);
+  const body = { message, content: btoa(unescape(encodeURIComponent(content))) };
+  if (sha) body.sha = sha;
+  const res = await fetch(`${API}/repos/${REPO}/contents/${path}`, {
+    method: 'PUT', headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+  });
+  return res.ok;
+}
+
+saveBtn.addEventListener('click', async () => {
+  const token = localStorage.getItem('gh_token');
+  if (!token) { showAuthModal(); return; }
+
+  exitEditMode();
+
+  const svgHTML = saveBtn.querySelector('svg').outerHTML;
+  saveBtn.innerHTML = svgHTML + ' Saving...';
+  saveBtn.disabled = true;
+
+  try {
+    const json = JSON.stringify(domToData(), null, 2);
+    const ok = await saveFile('data.json', json, token, 'Update Q2 plan data');
+
+    if (ok) {
+      saveBtn.innerHTML = svgHTML + ' Saved!';
+      setTimeout(() => { saveBtn.innerHTML = svgHTML + ' Save'; saveBtn.disabled = false; }, 2000);
+    } else {
+      localStorage.removeItem('gh_token');
+      alert('Save failed. Your token may have expired. Reload and try again.');
+      saveBtn.innerHTML = svgHTML + ' Save'; saveBtn.disabled = false;
+    }
+  } catch (err) {
+    alert('Save failed: ' + err.message);
+    saveBtn.innerHTML = svgHTML + ' Save'; saveBtn.disabled = false;
+  }
+});
+
+// --- Init ---
 fetch('data.json?'+Date.now()).then(r=>r.json()).then(data => { render(data); initNav(); });
 </script>
 </body>
