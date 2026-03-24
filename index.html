@@ -93,6 +93,13 @@
   .nav-dot.active { background: linear-gradient(135deg, #FF7451, #8C65FF); width: 24px; border-radius: 4px; }
   .slide-counter { font-size: 12px; color: #aaa; font-weight: 500; min-width: 40px; text-align: center; }
 
+  @media (max-width: 768px) {
+    .items-grid { grid-template-columns: 1fr; }
+    .title-slide h1 { font-size: 36px; }
+    .content-slide h2 { font-size: 28px; margin-bottom: 24px; }
+    .slide-content { width: 94%; }
+  }
+
   /* Edit mode */
   body.edit-mode [contenteditable="true"] { outline: none; border-radius: 4px; transition: box-shadow 0.2s; }
   body.edit-mode [contenteditable="true"]:hover { box-shadow: 0 0 0 2px rgba(140,101,255,0.15); }
