@@ -1,16 +1,36 @@
 {
   "title": "Genie Q2 Plan",
-  "subtitle": "Ideas, improvements, and new applications",
+  "subtitle": " New Ideas, improvements, and new applications",
   "groups": [
     {
       "id": "working",
       "label": "In Progress",
       "heading": "Already Working On",
       "items": [
-        { "name": "Filtering Metrics", "desc": "Genie can query metric data with specific filters applied (e.g. segments, dimensions)", "effort": 4, "impact": 5 },
-        { "name": "Train Genie", "desc": "Users can add company context, goals, and priorities so Genie tailors answers to their business", "effort": 4, "impact": 5 },
-        { "name": "Editing Dashboards", "desc": "Genie can modify existing dashboards, not just create new ones", "effort": 4, "impact": 3 },
-        { "name": "Reports (POC)", "desc": "Genie creates full Databox reports with charts, summaries, and text across slides or pages", "effort": 3, "impact": 1 }
+        {
+          "name": "Filtering Metrics",
+          "desc": "Genie can query metric data with specific filters applied (e.g. segments, dimensions)",
+          "effort": 4,
+          "impact": 5
+        },
+        {
+          "name": "Train Genie",
+          "desc": "Users can add company context, goals, and priorities so Genie tailors answers to their business",
+          "effort": 4,
+          "impact": 5
+        },
+        {
+          "name": "Editing Dashboards",
+          "desc": "Genie can modify existing dashboards, not just create new ones",
+          "effort": 4,
+          "impact": 3
+        },
+        {
+          "name": "Reports (POC)",
+          "desc": "Genie creates full Databox reports with charts, summaries, and text across slides or pages",
+          "effort": 3,
+          "impact": 1
+        }
       ]
     },
     {
@@ -18,8 +38,18 @@
       "label": "Tech Debt",
       "heading": "Tech Debt Improvements",
       "items": [
-        { "name": "Loading Messages Fix", "desc": "Fix streaming bug where switching tabs causes incomplete message delivery", "effort": 4, "impact": 3 },
-        { "name": "Design System", "desc": "Unified component library for all Genie UI elements", "effort": 2, "impact": 5 }
+        {
+          "name": "Loading Messages Fix",
+          "desc": "Fix streaming bug where switching tabs causes incomplete message delivery",
+          "effort": 4,
+          "impact": 3
+        },
+        {
+          "name": "Design System",
+          "desc": "Unified component library for all Genie UI elements",
+          "effort": 2,
+          "impact": 5
+        }
       ]
     },
     {
@@ -27,14 +57,54 @@
       "label": "Quick Wins",
       "heading": "Low Hanging Fruits",
       "items": [
-        { "name": "CTA in Mail and App", "desc": "Trigger Genie analysis directly from email notifications and in-app CTAs (metrics, databoards)", "effort": 5, "impact": 5 },
-        { "name": "Delete Metric / Databoard", "desc": "Users can delete Genie-created metrics and databoards directly from chat cards", "effort": 5, "impact": 5 },
-        { "name": "Calculator Tool", "desc": "Dedicated tool for precise calculations like ratios, margins, and custom formulas", "effort": 5, "impact": 5 },
-        { "name": "Save Prompts (Library)", "desc": "Save and reuse favorite prompts from a personal prompt library", "effort": 5, "impact": 5 },
-        { "name": "Follow Ups", "desc": "Genie suggests relevant follow-up questions after each response", "effort": 5, "impact": 3 },
-        { "name": "Voice Dictation", "desc": "Ask Genie questions by voice instead of typing", "effort": 5, "impact": 3 },
-        { "name": "Feedback Element", "desc": "Add feedback element at the end of each message that is more visible", "effort": 5, "impact": 3 },
-        { "name": "WL Genie App (Branding)", "desc": "Genie on white-label accounts uses neutral branding with no Databox references", "effort": 5, "impact": 1 }
+        {
+          "name": "CTA in Mail and App",
+          "desc": "Trigger Genie analysis directly from email notifications and in-app CTAs (metrics, databoards)",
+          "effort": 5,
+          "impact": 5
+        },
+        {
+          "name": "Delete Metric / Databoard",
+          "desc": "Users can delete Genie-created metrics and databoards directly from chat cards",
+          "effort": 5,
+          "impact": 5
+        },
+        {
+          "name": "Calculator Tool",
+          "desc": "Dedicated tool for precise calculations like ratios, margins, and custom formulas",
+          "effort": 5,
+          "impact": 5
+        },
+        {
+          "name": "Save Prompts (Library)",
+          "desc": "Save and reuse favorite prompts from a personal prompt library",
+          "effort": 5,
+          "impact": 5
+        },
+        {
+          "name": "Follow Ups",
+          "desc": "Genie suggests relevant follow-up questions after each response",
+          "effort": 5,
+          "impact": 3
+        },
+        {
+          "name": "Voice Dictation",
+          "desc": "Ask Genie questions by voice instead of typing",
+          "effort": 5,
+          "impact": 3
+        },
+        {
+          "name": "Feedback Element",
+          "desc": "Add feedback element at the end of each message that is more visible",
+          "effort": 5,
+          "impact": 3
+        },
+        {
+          "name": "WL Genie App (Branding)",
+          "desc": "Genie on white-label accounts uses neutral branding with no Databox references",
+          "effort": 5,
+          "impact": 1
+        }
       ]
     },
     {
@@ -42,13 +112,48 @@
       "label": "Closing Gaps",
       "heading": "Gaps and Improvements",
       "items": [
-        { "name": "Calculated Metrics", "desc": "Genie can create calculated metrics directly from chat", "effort": 4, "impact": 5 },
-        { "name": "Side Panel Genie", "desc": "Genie side panel accessible from every screen in Databox", "effort": 2, "impact": 5 },
-        { "name": "Multi Metrics Charts", "desc": "Create charts that combine multiple metrics in a single visualization", "effort": 3, "impact": 3 },
-        { "name": "Mobile View Improvements", "desc": "Improved Genie experience on mobile devices", "effort": 3, "impact": 3 },
-        { "name": "Dataset Manipulation", "desc": "Add date transformations and calculated columns to datasets", "effort": 3, "impact": 3 },
-        { "name": "Pricing", "desc": "Implement Genie's credit-based pricing system with usage info, payments, and limits", "effort": 3, "impact": 3 },
-        { "name": "Context & Source Selector with @", "desc": "Select multiple data sources and reference specific metrics, databoards, or sources using @ mentions", "effort": 2, "impact": 3 }
+        {
+          "name": "Calculated Metrics",
+          "desc": "Genie can create calculated metrics directly from chat",
+          "effort": 4,
+          "impact": 5
+        },
+        {
+          "name": "Side Panel Genie",
+          "desc": "Genie side panel accessible from every screen in Databox",
+          "effort": 2,
+          "impact": 5
+        },
+        {
+          "name": "Multi Metrics Charts",
+          "desc": "Create charts that combine multiple metrics in a single visualization",
+          "effort": 3,
+          "impact": 3
+        },
+        {
+          "name": "Mobile View Improvements",
+          "desc": "Improved Genie experience on mobile devices",
+          "effort": 3,
+          "impact": 3
+        },
+        {
+          "name": "Dataset Manipulation",
+          "desc": "Add date transformations and calculated columns to datasets",
+          "effort": 3,
+          "impact": 3
+        },
+        {
+          "name": "Pricing",
+          "desc": "Implement Genie's credit-based pricing system with usage info, payments, and limits",
+          "effort": 3,
+          "impact": 3
+        },
+        {
+          "name": "Context & Source Selector with @",
+          "desc": "Select multiple data sources and reference specific metrics, databoards, or sources using @ mentions",
+          "effort": 2,
+          "impact": 3
+        }
       ]
     },
     {
@@ -56,16 +161,66 @@
       "label": "New Capabilities",
       "heading": "Features",
       "items": [
-        { "name": "Cross Agency Conversations", "desc": "Agencies can ask Genie questions about a specific client's data from their account", "effort": 5, "impact": 5 },
-        { "name": "Persistent Memory", "desc": "Genie remembers context and preferences across conversations", "effort": 3, "impact": 5 },
-        { "name": "Slack App", "desc": "Interact with Genie directly from Slack", "effort": 3, "impact": 5 },
-        { "name": "File Upload", "desc": "Upload files (Excel, CSV, images) for Genie to analyze directly in chat", "effort": 1, "impact": 5 },
-        { "name": "Custom MCP Integrations", "desc": "Connect custom MCP servers to extend Genie with external tools and data", "effort": 1, "impact": 5 },
-        { "name": "Artifacts", "desc": "Rich interactive outputs that can replace standalone databoards and reports", "effort": 1, "impact": 5 },
-        { "name": "Onboarding", "desc": "AI-guided onboarding flow that walks new users through setup from signup", "effort": 1, "impact": 5 },
-        { "name": "GPT App", "desc": "Databox Genie available as an app in the ChatGPT GPT Store", "effort": 1, "impact": 5 },
-        { "name": "Web Search", "desc": "Genie can search the web to enrich answers with external context", "effort": 5, "impact": 1 },
-        { "name": "WL Genie App (Behavior)", "desc": "White-label partners can create custom Genie agents with limited tools and tailored behavior", "effort": 1, "impact": 3 }
+        {
+          "name": "Cross Agency Conversations",
+          "desc": "Agencies can ask Genie questions about a specific client's data from their account",
+          "effort": 5,
+          "impact": 5
+        },
+        {
+          "name": "Persistent Memory",
+          "desc": "Genie remembers context and preferences across conversations",
+          "effort": 3,
+          "impact": 5
+        },
+        {
+          "name": "Slack App",
+          "desc": "Interact with Genie directly from Slack",
+          "effort": 3,
+          "impact": 5
+        },
+        {
+          "name": "File Upload",
+          "desc": "Upload files (Excel, CSV, images) for Genie to analyze directly in chat",
+          "effort": 1,
+          "impact": 5
+        },
+        {
+          "name": "Custom MCP Integrations",
+          "desc": "Connect custom MCP servers to extend Genie with external tools and data",
+          "effort": 1,
+          "impact": 5
+        },
+        {
+          "name": "Artifacts",
+          "desc": "Rich interactive outputs that can replace standalone databoards and reports",
+          "effort": 1,
+          "impact": 5
+        },
+        {
+          "name": "Onboarding",
+          "desc": "AI-guided onboarding flow that walks new users through setup from signup",
+          "effort": 1,
+          "impact": 5
+        },
+        {
+          "name": "GPT App",
+          "desc": "Databox Genie available as an app in the ChatGPT GPT Store",
+          "effort": 1,
+          "impact": 5
+        },
+        {
+          "name": "Web Search",
+          "desc": "Genie can search the web to enrich answers with external context",
+          "effort": 5,
+          "impact": 1
+        },
+        {
+          "name": "WL Genie App (Behavior)",
+          "desc": "White-label partners can create custom Genie agents with limited tools and tailored behavior",
+          "effort": 1,
+          "impact": 3
+        }
       ]
     }
   ]
