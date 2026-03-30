@@ -24,12 +24,6 @@
           "desc": "Genie can modify existing dashboards, not just create new ones",
           "effort": 4,
           "impact": 3
-        },
-        {
-          "name": "Reports (POC)",
-          "desc": "Genie creates full Databox reports with charts, summaries, and text across slides or pages",
-          "effort": 3,
-          "impact": 1
         }
       ]
     },
@@ -153,6 +147,12 @@
           "desc": "Select multiple data sources and reference specific metrics, databoards, or sources using @ mentions",
           "effort": 2,
           "impact": 3
+        },
+        {
+          "name": "Reports (POC)",
+          "desc": "Genie creates full Databox reports with charts, summaries, and text across slides or pages",
+          "effort": 3,
+          "impact": 1
         }
       ]
     },
